@@ -15,7 +15,7 @@ public class Randomizer {
 	public List<String> randomizer(List<String> everything){
 		ReadingFiles readingFiles = new ReadingFiles();
 		FileEditer fileEditer = new FileEditer();
-		everything = readingFiles.readFile(everything, "file.txt");
+		everything = readingFiles.readFile(everything, "file.txt", 0);
 		for (int i = 0; i < everything.size() + randomized.size(); i ++){
 			randomNo = random.nextInt(everything.size());
 			randomized.add(everything.get(randomNo));

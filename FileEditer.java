@@ -33,13 +33,20 @@ public class FileEditer {
 	}
 	
 	public void add(int NoOfNames){
-		
+		ReadingFiles readingFiles = new ReadingFiles();
+		List<String> everything = new ArrayList<String>(), everything2 = new ArrayList<String>();
+		everything = readingFiles.readFile(everything, "randomNames.txt", NoOfNames);
+		everything2 = readingFiles.readFile(everything2, "file.txt", 0);
+		for(int i = 0; i < everything2.size(); i ++){
+			everything.add(everything2.get(i));
+		}
+		editFile(everything, "file.txt");
 	}
 	
 	public void spaceEraser(String file){
 		List<String> everything = new ArrayList<String>();
 		ReadingFiles readingFiles = new ReadingFiles();
-		everything = readingFiles.readFile(everything, file);
+		everything = readingFiles.readFile(everything, file, 0);
 		for (int i = 0; i < everything.size(); i ++){
 			if (everything.get(i).equals("") || everything.get(i).contains(" ")){
 				everything.remove(i);

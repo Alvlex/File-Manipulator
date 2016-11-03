@@ -17,43 +17,28 @@ public class userInterface {
 	public void choice(){
 		FileEditer fileEditer = new FileEditer();
 		Time time = new Time();
-		everything = readingFiles.readFile(everything, "file.txt");
-
-		int reply = JOptionPane.showConfirmDialog(null, "Do you want to randomize the file?");
-		if (reply == JOptionPane.YES_OPTION){
-			startTime = time.getStartTime(longNumber);
-			everything = randomizer.randomizer(everything);
-			time.outputTotalTime("randomizing", longNumber, longNumber, startTime);
-		}
-
-		reply = JOptionPane.showConfirmDialog(null, "Do you want to sort the names?");
-		if (reply == JOptionPane.YES_OPTION){
-			startTime = time.getStartTime(longNumber);
-			everything = readingFiles.sortFile(everything);
-			fileEditer.editFile(everything, "file.txt");
-			time.outputTotalTime("sorting", longNumber, longNumber, startTime);
-		}
-
-		reply = JOptionPane.showConfirmDialog(null, "Do you want to open a file?");
-		if (reply == JOptionPane.YES_OPTION){
-			String answer = repeatedCode("open", reply, fileEditer);
-			fileEditer.open(answer);
-		}
-
-		reply = JOptionPane.showConfirmDialog(null, "Do you want to add names to the file?");
-		if (reply == JOptionPane.YES_OPTION){
-			reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?"));
-			fileEditer.add(reply);
-		}
-
-		reply = JOptionPane.showConfirmDialog(null, "Do you want to erase spaces from a file?");
-		if (reply == JOptionPane.YES_OPTION){
-			String answer = repeatedCode("erased spaces from", reply, fileEditer);
-			fileEditer.spaceEraser(answer);
+		everything = readingFiles.readFile(everything, "file.txt", 0);
+		int answer = Integer.parseInt(JOptionPane.showInputDialog("What do you want to do?\n(1) Randomize\n(2) Sort\n(3) Open\n(4) Add Names\n(5) Erase"));
+		switch(answer){
+		case 1: 
+			randomize(time); 
+			break;
+		case 2:
+			sort(time, fileEditer);
+			break;
+		case 3:
+			open(fileEditer, time);
+			break;
+		case 4:
+			add(fileEditer, time);
+			break;
+		case 5:
+			erase(fileEditer, time);
+			break;
 		}
 	}
 
-	public String repeatedCode(String modulation, int reply, FileEditer fileEditer){
+	public String repeatedCode(String modulation, FileEditer fileEditer){
 		ReadingFiles readingFiles = new ReadingFiles();
 		List<String> files = readingFiles.textFiles();
 		String question = "What file do you want to " + modulation + "?";
@@ -61,5 +46,34 @@ public class userInterface {
 			question = question + "\n" + files.get(i);
 		}
 		return JOptionPane.showInputDialog(null, question);
+	}
+	public void randomize(Time time){
+		startTime = time.getStartTime(longNumber);
+		everything = randomizer.randomizer(everything);
+		time.outputTotalTime("randomizing", longNumber, longNumber, startTime);
+	}
+	public void sort(Time time, FileEditer fileEditer){
+		startTime = time.getStartTime(longNumber);
+		everything = readingFiles.sortFile(everything);
+		fileEditer.editFile(everything, "file.txt");
+		time.outputTotalTime("sorting", longNumber, longNumber, startTime);
+	}
+	public void open(FileEditer fileEditer, Time time){
+		String answer = repeatedCode("open", fileEditer);
+		startTime = time.getStartTime(longNumber);
+		fileEditer.open(answer);
+		time.outputTotalTime("opening", longNumber, longNumber, startTime);
+	}
+	public void add(FileEditer fileEditer, Time time){
+		int reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?"));
+		startTime = time.getStartTime(longNumber);
+		fileEditer.add(reply);
+		time.outputTotalTime("adding names", longNumber, longNumber, startTime);
+	}
+	public void erase(FileEditer fileEditer, Time time){
+		String answer = repeatedCode("erase spaces from", fileEditer);
+		startTime = time.getStartTime(longNumber);
+		fileEditer.spaceEraser(answer);
+		time.outputTotalTime("erase spaces", longNumber, longNumber, startTime);
 	}
 }

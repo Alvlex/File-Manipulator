@@ -15,16 +15,25 @@ public class ReadingFiles {
 
 	BufferedReader br;
 
-	public List<String> readFile(List<String> everything, String file){
+	public List<String> readFile(List<String> everything, String file, int NoOfNames){
 		try {
 			br = new BufferedReader(new FileReader(file));
 
 			try {
 				String line = br.readLine();
 				everything.clear();
-				while (line != null) {
-					everything.add(line);
-					line = br.readLine();
+				if (NoOfNames == 0){
+					while (line != null) {
+						everything.add(line);
+						line = br.readLine();
+					}
+				}
+				else{
+					while(NoOfNames > 0){
+						everything.add(line);
+						line = br.readLine();
+						NoOfNames --;
+					}
 				}
 				br.close();
 			} 
