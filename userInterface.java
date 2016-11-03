@@ -14,11 +14,11 @@ public class userInterface {
 	ReadingFiles readingFiles = new ReadingFiles();
 	Randomizer randomizer = new Randomizer();
 
-	public void choice(){
+	public boolean choice(boolean continu){
 		FileEditer fileEditer = new FileEditer();
 		Time time = new Time();
 		everything = readingFiles.readFile(everything, "file.txt", 0);
-		int answer = Integer.parseInt(JOptionPane.showInputDialog("What do you want to do?\n(1) Randomize\n(2) Sort\n(3) Open\n(4) Add Names\n(5) Erase"));
+		int answer = Integer.parseInt(JOptionPane.showInputDialog("What do you want to do?\n(1) Randomizethe file\n(2) Sort the file\n(3) Open a file\n(4) Add Names to the file\n(5) Erase spaces in a file\n(6) Stop the program"));
 		switch(answer){
 		case 1: 
 			randomize(time); 
@@ -35,7 +35,11 @@ public class userInterface {
 		case 5:
 			erase(fileEditer, time);
 			break;
+		case 6:
+			continu = false;
+			break;
 		}
+		return continu;
 	}
 
 	public String repeatedCode(String modulation, FileEditer fileEditer){
