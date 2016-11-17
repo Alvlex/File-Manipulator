@@ -3,69 +3,77 @@ package mainProgram;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class userInterface {
 
 	long longNumber, startTime;
-	List<String> everything = new ArrayList<String>();
+	List<String> everything = new ArrayList<String>(), original;
 	ReadingFiles readingFiles = new ReadingFiles();
 	Randomizer randomizer = new Randomizer();
 	FileEditer fileEditer = new FileEditer();
 	Time time = new Time();
-
+	int n;
 	public boolean choice(boolean continu){
-		everything = readingFiles.readFile(everything, "file.txt", 0);
-		int answer = Integer.parseInt(JOptionPane.showInputDialog("What do you want to do?\n"
-				+ "(1)  Randomize file.txt\n"
-				+ "(2)  Sort file.txt\n"
-				+ "(3)  Open a file\n"
-				+ "(4)  Add Names from another file to file.txt\n"
-				+ "(5)  Erase spaces in a file\n"
-				+ "(6)  Save file.txt as the 'Original Form'\n"
-				+ "(7)  Restore file.txt to original form\n"
-				+ "(8)  Randomly delete names from file.txt\n"
-				+ "(9)  Specifically delete names from file.txt\n"
-				+ "(10) Add specific names to file.txt\n"
-				+ "(11) Find the index of a name in the file\n" 
-				+ "(12) Delete a name using the index\n" 		
-				+ "(13) Stop the program"));
-		switch(answer){
-		case 1: 
+		Object[] options = {"Randomize file.txt", "Sort file.txt", "Open a file", "Add Names from another file to file.txt",
+				"Erase spaces in a file", "Save file.txt as the 'Original Form'", "Restore file.txt to original form", 
+				"Randomly delete names from file.txt", "Specifically delete names from file.txt", 
+				"Add specific names to file.txt", "Find a name from the index in the file", "Delete a name using the index",
+				"Find the ordinal number of a name in the file", "Stop the program"};
+		JComboBox<?> optionList = new JComboBox<Object>(options);
+		optionList.setSelectedIndex(0);
+		JPanel jpan = new JPanel ();
+		jpan.add(new JLabel("Choose an option:"));
+		jpan.add(optionList);
+		int n = JOptionPane.showOptionDialog(null, jpan, "File Manipulator Program",
+				JOptionPane.DEFAULT_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				null,
+				null);
+		if (n != -1){
+			n = optionList.getSelectedIndex();
+		}
+		original = readingFiles.readFile(everything, "file.txt", 0);
+		switch(n){
+		case 0: 
 			randomize(); 
 			break;
-		case 2:
+		case 1:
 			sort();
 			break;
-		case 3:
+		case 2:
 			open();
 			break;
-		case 4:
+		case 3:
 			add();
 			break;
-		case 5:
+		case 4:
 			eraseSpaces();
 			break;
-		case 6:
+		case 5:
 			save();
 			break;
-		case 7:
+		case 6:
 			restore();
 			break;
-		case 8:
+		case 7:
 			randomDelete();
 			break;
-		case 9:
+		case 8:
 			specificDelete();
 			break;
-		case 10:
+		case 9:
 			addName();
 			break;
-		case 11:
+		case 10:
 			getName();
 			break;
-		case 12:
+		case 11:
 			deleteIndex();
+			break;
+		case 12:
+			findOrdinalNumber();
 			break;
 		case 13:
 			continu = false;
@@ -75,21 +83,20 @@ public class userInterface {
 	}
 
 	public String repeatedCode(String modulation){
-		everything = readingFiles.textFiles();
 		String question = "What file do you want to " + modulation + "?";
-		for (int i = 0; i < everything.size(); i ++){
-			question = question + "\n" + everything.get(i);
+		for (int i = 0; i < original.size(); i ++){
+			question = question + "\n" + original.get(i);
 		}
 		return JOptionPane.showInputDialog(null, question);
 	}
 	public void randomize(){
 		startTime = time.getStartTime(longNumber);
-		everything = randomizer.randomizer(everything);
+		randomizer.randomizer(original);
 		time.outputTotalTime("randomizing", longNumber, longNumber, startTime);
 	}
 	public void sort(){
 		startTime = time.getStartTime(longNumber);
-		everything = readingFiles.sortFile(everything);
+		everything = readingFiles.sortFile(original);
 		fileEditer.editFile(everything, "file.txt");
 		time.outputTotalTime("sorting", longNumber, longNumber, startTime);
 	}
@@ -100,7 +107,7 @@ public class userInterface {
 		time.outputTotalTime("opening", longNumber, longNumber, startTime);
 	}
 	public void add(){
-		int reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?\nBetween 0 and " + readingFiles.readFile(everything, "randomNames.txt", 0).size()));
+		int reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?\nBetween 0 and " + original.size()));
 		startTime = time.getStartTime(longNumber);
 		fileEditer.add(reply);
 		time.outputTotalTime("adding names", longNumber, longNumber, startTime);
@@ -117,7 +124,7 @@ public class userInterface {
 		time.outputTotalTime("restore", longNumber, longNumber, startTime);
 	}
 	public void randomDelete(){
-		int answer = Integer.parseInt(JOptionPane.showInputDialog("How many names do you want to randomly delete?\nBetween 0 and " + readingFiles.readFile(everything, "file.txt", 0).size()));
+		int answer = Integer.parseInt(JOptionPane.showInputDialog("How many names do you want to randomly delete?\nBetween 0 and " + original.size()));
 		startTime = time.getStartTime(longNumber);
 		fileEditer.deleteRandom(answer);
 		time.outputTotalTime("randomly delete", longNumber, longNumber, startTime);
@@ -141,8 +148,7 @@ public class userInterface {
 	}
 	public void save(){
 		startTime = time.getStartTime(longNumber);
-		everything = readingFiles.readFile(everything, "file.txt", 0);
-		fileEditer.editFile(everything, "original.txt");
+		fileEditer.editFile(original, "original.txt");
 		time.outputTotalTime("saving the file", longNumber, longNumber, startTime);
 	}
 	public void addName(){
@@ -159,18 +165,42 @@ public class userInterface {
 		}
 	}
 	public void getName(){
-		everything = readingFiles.readFile(everything, "file.txt", 0);
-		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index\nType '0' to go back\nOtherwise type '1' to " + (everything.size() + 1)));
+		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index\nType '0' to go back\nOtherwise type '1' to " + (original.size() + 1)));
 		startTime = time.getStartTime(longNumber);
-		JOptionPane.showMessageDialog(null, everything.get(index - 1));
+		JOptionPane.showMessageDialog(null, original.get(index - 1));
 		time.outputTotalTime("retrieving a name", longNumber, longNumber, startTime);
 	}
 	public void deleteIndex(){
-		everything = readingFiles.readFile(everything, "file.txt", 0);
-		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index to remove\nType '0' to go back\nOtherwise type '1' to " + (everything.size() + 1)));
+		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index to remove\nType '0' to go back\nOtherwise type '1' to " + (original.size() + 1)));
+		everything = original;
 		startTime = time.getStartTime(longNumber);
 		everything.remove(index - 1);
 		fileEditer.editFile(everything, "file.txt");
 		time.outputTotalTime("deleting an index", longNumber, longNumber, startTime);
+	}
+
+	public void findOrdinalNumber(){
+		String name = JOptionPane.showInputDialog("Input a name to find the ordinal number of");
+		startTime = time.getStartTime(longNumber);
+		String message;
+		if (original.contains(name)){
+			if (((original.indexOf(name) + 1) + "").endsWith("1")){
+				message = name + " is the " + (original.indexOf(name)  + 1) + "st name in the file";
+			}
+			else if (((original.indexOf(name) + 1) + "").endsWith("2")){
+				message = name + " is the " + (original.indexOf(name) + 1) + "nd name in the file";
+			}
+			else if (((original.indexOf(name) + 1) + "").endsWith("3")){
+				message = name + " is the " + (original.indexOf(name) + 1) + "rd name in the file"; 
+			}
+			else{
+				message = name + " is the " + (original.indexOf(name) + 1) + "th name in the file";
+			}
+		}
+		else{
+			message = name + " not found in the file!";
+		}
+		time.outputTotalTime("finding the index", longNumber, longNumber, startTime);
+		JOptionPane.showMessageDialog(null, message);
 	}
 }
