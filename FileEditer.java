@@ -88,4 +88,9 @@ public class FileEditer {
 			return false;
 		}
 	}
+	public void addName(String Name){
+		everything = readingFiles.readFile(everything, "file.txt", 0);
+		everything.add(Name);
+		editFile(everything, "file.txt");
+	}
 }

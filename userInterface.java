@@ -13,20 +13,23 @@ public class userInterface {
 	Randomizer randomizer = new Randomizer();
 	FileEditer fileEditer = new FileEditer();
 	Time time = new Time();
-	public boolean choice(boolean continu){
 
+	public boolean choice(boolean continu){
 		everything = readingFiles.readFile(everything, "file.txt", 0);
 		int answer = Integer.parseInt(JOptionPane.showInputDialog("What do you want to do?\n"
 				+ "(1)  Randomize file.txt\n"
 				+ "(2)  Sort file.txt\n"
 				+ "(3)  Open a file\n"
-				+ "(4)  Add Names to file.txt\n"
+				+ "(4)  Add Names from another file to file.txt\n"
 				+ "(5)  Erase spaces in a file\n"
 				+ "(6)  Save file.txt as the 'Original Form'\n"
 				+ "(7)  Restore file.txt to original form\n"
 				+ "(8)  Randomly delete names from file.txt\n"
 				+ "(9)  Specifically delete names from file.txt\n"
-				+ "(10) Stop the program"));
+				+ "(10) Add specific names to file.txt\n"
+				+ "(11) Find the index of a name in the file\n" 
+				+ "(12) Delete a name using the index\n" 		
+				+ "(13) Stop the program"));
 		switch(answer){
 		case 1: 
 			randomize(); 
@@ -56,6 +59,15 @@ public class userInterface {
 			specificDelete();
 			break;
 		case 10:
+			addName();
+			break;
+		case 11:
+			getName();
+			break;
+		case 12:
+			deleteIndex();
+			break;
+		case 13:
 			continu = false;
 			break;
 		}
@@ -128,7 +140,37 @@ public class userInterface {
 		}
 	}
 	public void save(){
+		startTime = time.getStartTime(longNumber);
 		everything = readingFiles.readFile(everything, "file.txt", 0);
 		fileEditer.editFile(everything, "original.txt");
+		time.outputTotalTime("saving the file", longNumber, longNumber, startTime);
+	}
+	public void addName(){
+		while(true){
+			String name = JOptionPane.showInputDialog("Input a name\nType 'null' to go back");
+			if (name.equals("null")){
+				break;
+			}
+			else{
+				startTime = time.getStartTime(longNumber);
+				fileEditer.addName(name);
+				time.outputTotalTime("adding a name", longNumber, longNumber, startTime);
+			}
+		}
+	}
+	public void getName(){
+		everything = readingFiles.readFile(everything, "file.txt", 0);
+		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index\nType '0' to go back\nOtherwise type '1' to " + (everything.size() + 1)));
+		startTime = time.getStartTime(longNumber);
+		JOptionPane.showMessageDialog(null, everything.get(index - 1));
+		time.outputTotalTime("retrieving a name", longNumber, longNumber, startTime);
+	}
+	public void deleteIndex(){
+		everything = readingFiles.readFile(everything, "file.txt", 0);
+		int index = Integer.parseInt(JOptionPane.showInputDialog("Input an index to remove\nType '0' to go back\nOtherwise type '1' to " + (everything.size() + 1)));
+		startTime = time.getStartTime(longNumber);
+		everything.remove(index - 1);
+		fileEditer.editFile(everything, "file.txt");
+		time.outputTotalTime("deleting an index", longNumber, longNumber, startTime);
 	}
 }
