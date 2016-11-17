@@ -10,6 +10,7 @@ Can do lots of things:
 (7) Restore a file to its 'original form' (basically changing the file so it's the same as another file)  
 (8) Randomly delete a number of strings from a file  
 (9) Delete specific strings from a file  
-(10)Add specific names
-(11)Finding a name from the index
-(12)Deleting a name using index
+(10)Add specific names  
+(11)Finding a name from the index  
+(12)Deleting a name using index  
+(13)Find the ordinal number of a name in the file  
