@@ -16,7 +16,7 @@ public class ReadingFiles {
 	BufferedReader br;
 	List<String> everything = new ArrayList<String>();
 	String line;
-	public List<String> readFile(List<String> everything2, String file, int NoOfNames){
+	public List<String> readFile(String file, int NoOfNames){
 		try {
 			br = new BufferedReader(new FileReader(file));
 			everything.clear();

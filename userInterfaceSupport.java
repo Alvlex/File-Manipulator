@@ -11,9 +11,11 @@ public class userInterfaceSupport {
 
 	Randomizer randomizer = new Randomizer();
 	FileEditer fileEditer = new FileEditer();
+	ReadingFiles readingFiles = new ReadingFiles();
 	Time time = new Time();
 
-	public String repeatedCode(String modulation, List<String> original){
+	public String repeatedCode(String modulation){
+		List<String> original = readingFiles.textFiles();
 		String question = "What file do you want to " + modulation + "?";
 		for (int i = 0; i < original.size(); i ++){
 			question = question + "\n" + original.get(i);
@@ -35,7 +37,7 @@ public class userInterfaceSupport {
 	}
 
 	public void open(List<String> original){
-		String answer = repeatedCode("open", original);
+		String answer = repeatedCode("open");
 		startTime = time.getStartTime(longNumber);
 		fileEditer.open(answer);
 		time.outputTotalTime("opening", longNumber, longNumber, startTime);
@@ -49,7 +51,7 @@ public class userInterfaceSupport {
 	}
 
 	public void eraseSpaces(List<String> original){
-		String answer = repeatedCode("erase spaces from", original);
+		String answer = repeatedCode("erase spaces from");
 		startTime = time.getStartTime(longNumber);
 		fileEditer.spaceEraser(answer);
 		time.outputTotalTime("erase spaces", longNumber, longNumber, startTime);

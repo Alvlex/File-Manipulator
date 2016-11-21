@@ -38,16 +38,18 @@ public class FileEditer {
 	}
 
 	public void add(int NoOfNames){
-		everything = readingFiles.readFile(everything, "randomNames.txt", NoOfNames);
-		everything2 = readingFiles.readFile(everything2, "file.txt", 0);
-		for(int i = 0; i < everything2.size(); i ++){
-			everything.add(everything2.get(i));
+		if (NoOfNames != 0){
+			everything = readingFiles.readFile("randomNames.txt", NoOfNames);
+			everything2 = readingFiles.readFile("file.txt", 0);
+			for(int i = 0; i < everything.size(); i ++){
+				everything2.add(everything.get(i));
+			}
+			editFile(everything2, "file.txt");
 		}
-		editFile(everything, "file.txt");
 	}
 
 	public void spaceEraser(String file){
-		everything = readingFiles.readFile(everything, file, 0);
+		everything = readingFiles.readFile(file, 0);
 		for (int i = 0; i < everything.size(); i ++){
 			if (everything.get(i).equals("") || everything.get(i).contains(" ")){
 				everything.remove(i);
@@ -58,13 +60,13 @@ public class FileEditer {
 	}
 
 	public void restore(){
-		everything = readingFiles.readFile(everything, "original.txt", 0);
+		everything = readingFiles.readFile("original.txt", 0);
 		editFile(everything, "file.txt");
 	}
 
 	public void deleteRandom(int NoOfNames){
 		randomized.clear();
-		everything = readingFiles.readFile(everything, "file.txt", 0);
+		everything = readingFiles.readFile("file.txt", 0);
 		for (int i = 0; i < everything.size() + randomized.size(); i ++){
 			randomNo = random.nextInt(everything.size());
 			randomized.add(everything.get(randomNo));
@@ -77,7 +79,7 @@ public class FileEditer {
 	}
 
 	public boolean deleteSpecific(String name){
-		everything = readingFiles.readFile(everything, "file.txt", 0);
+		everything = readingFiles.readFile("file.txt", 0);
 		int originalSize = everything.size();
 		everything.remove(name);
 		if (everything.size() < originalSize){
@@ -89,7 +91,7 @@ public class FileEditer {
 		}
 	}
 	public void addName(String Name){
-		everything = readingFiles.readFile(everything, "file.txt", 0);
+		everything = readingFiles.readFile("file.txt", 0);
 		everything.add(Name);
 		editFile(everything, "file.txt");
 	}

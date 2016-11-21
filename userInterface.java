@@ -9,11 +9,20 @@ ReadingFiles readingFiles = new ReadingFiles();
 userInterfaceSupport UserInterfaceSupport = new userInterfaceSupport();
 	int n;
 	public boolean choice(boolean continu){
-		Object[] options = {"Randomize file.txt", "Sort file.txt", "Open a file", "Add Names from another file to file.txt",
-				"Erase spaces in a file", "Save file.txt as the 'Original Form'", "Restore file.txt to original form", 
-				"Randomly delete names from file.txt", "Specifically delete names from file.txt", 
-				"Add specific names to file.txt", "Find a name from the index in the file", "Delete a name using the index",
-				"Find the ordinal number of a name in the file", "Stop the program"};
+		Object[] options = {"Randomize file.txt", 
+							"Sort file.txt", 
+							"Open a file", 
+							"Add Names from another file to file.txt",
+							"Erase spaces in a file", 
+							"Save file.txt as the 'Original Form'", 
+							"Restore file.txt to original form",
+							"Randomly delete names from file.txt", 
+							"Specifically delete names from file.txt",
+							"Add specific names to file.txt", 
+							"Find a name from the index in the file", 
+							"Delete a name using the index",	
+							"Find the ordinal number of a name in the file", 
+							"Stop the program"};
 		JComboBox<?> optionList = new JComboBox<Object>(options);
 		optionList.setSelectedIndex(0);
 		JPanel jpan = new JPanel ();
@@ -28,7 +37,7 @@ userInterfaceSupport UserInterfaceSupport = new userInterfaceSupport();
 		if (n != -1){
 			n = optionList.getSelectedIndex();
 		}
-		original = readingFiles.readFile(original, "file.txt", 0);
+		original = readingFiles.readFile("file.txt", 0);
 		switch(n){
 		case 0: 
 			UserInterfaceSupport.randomize(original); 
