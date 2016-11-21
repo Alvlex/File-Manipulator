@@ -14,14 +14,14 @@ import java.util.List;
 public class ReadingFiles {
 
 	BufferedReader br;
-
-	public List<String> readFile(List<String> everything, String file, int NoOfNames){
+	List<String> everything = new ArrayList<String>();
+	String line;
+	public List<String> readFile(List<String> everything2, String file, int NoOfNames){
 		try {
 			br = new BufferedReader(new FileReader(file));
-
+			everything.clear();
 			try {
-				String line = br.readLine();
-				everything.clear();
+				line = br.readLine();
 				if (NoOfNames == 0){
 					while (line != null) {
 						everything.add(line);
