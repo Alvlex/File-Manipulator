@@ -14,3 +14,5 @@ Can do lots of things:
 (11)Finding a name from the index  
 (12)Deleting a name using index  
 (13)Find the ordinal number of a name in the file  
+(14)Make a new file in the same directory as file.txt and the others  
+(15)Delete a file in that directory  
