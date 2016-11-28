@@ -19,6 +19,6 @@ public class Randomizer {
 			randomized.add(everything.get(randomNo));
 			everything.remove(randomNo);
 		}
-		fileEditer.editFile(randomized, "file.txt");
+		fileEditer.editFile(randomized, "file.txt", false);
 	}
 }

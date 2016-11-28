@@ -1,8 +1,8 @@
 package mainProgram;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,31 +20,48 @@ public class FileEditer {
 					{"rundll32", "url.dll,FileProtocolHandler",
 					file.getAbsolutePath()});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void editFile(List<String> everything, String file){
+	public void editFile(List<String> everything, String file, boolean append){
 		try {
-			PrintStream fileStream = new PrintStream(file);
-			for(int i = 0; i < everything.size(); i ++){
-				fileStream.println(everything.get(i));
+			File file1 = new File("/" + file);
+			FileWriter fw = new FileWriter(file1.getAbsoluteFile(), append);
+			if (append == true){
+				for(int i = 0; i < everything.size(); i ++){
+					if (i == 0){
+						fw.write("\n" + everything.get(i) + "\n");
+					}
+					else if (i == everything.size() - 1){
+						fw.write(everything.get(i));
+					}
+					else{
+						fw.write(everything.get(i) + "\n");
+					}
+				}
 			}
-			fileStream.close();
+			else{
+				for(int i = 0; i < everything.size(); i ++){
+					if (i == everything.size() - 1){
+						fw.write(everything.get(i));
+					}
+					else{
+						fw.write(everything.get(i) + "\n");
+					}
+				}
+			}
+			fw.flush();
+			fw.close();
 		} catch (IOException e) {
 			System.out.println("File not found");
 		}
 	}
 
-	public void add(int NoOfNames){
+	public void add(int NoOfNames, String file){
 		if (NoOfNames != 0){
 			everything = readingFiles.readFile("randomNames.txt", NoOfNames);
-			everything2 = readingFiles.readFile("file.txt", 0);
-			for(int i = 0; i < everything.size(); i ++){
-				everything2.add(everything.get(i));
-			}
-			editFile(everything2, "file.txt");
+			editFile(everything, file, true);
 		}
 	}
 
@@ -56,17 +73,17 @@ public class FileEditer {
 				i --;
 			}
 		}
-		editFile(everything, file);
+		editFile(everything, file, false);
 	}
 
-	public void restore(){
+	public void restore(String file){
 		everything = readingFiles.readFile("original.txt", 0);
-		editFile(everything, "file.txt");
+		editFile(everything, file, false);
 	}
 
-	public void deleteRandom(int NoOfNames){
+	public void deleteRandom(int NoOfNames, String file){
 		randomized.clear();
-		everything = readingFiles.readFile("file.txt", 0);
+		everything = readingFiles.readFile(file, 0);
 		for (int i = 0; i < everything.size() + randomized.size(); i ++){
 			randomNo = random.nextInt(everything.size());
 			randomized.add(everything.get(randomNo));
@@ -75,24 +92,24 @@ public class FileEditer {
 		for(int i = 0; i < NoOfNames; i ++){
 			randomized.remove(0);
 		}
-		editFile(randomized, "file.txt");
+		editFile(randomized, file, false);
 	}
 
-	public boolean deleteSpecific(String name){
-		everything = readingFiles.readFile("file.txt", 0);
+	public boolean deleteSpecific(String name, String file){
+		everything = readingFiles.readFile(file, 0);
 		int originalSize = everything.size();
 		everything.remove(name);
 		if (everything.size() < originalSize){
-			editFile(everything, "file.txt");
+			editFile(everything, file, false);
 			return true;
 		}
 		else{
 			return false;
 		}
 	}
-	public void addName(String Name){
-		everything = readingFiles.readFile("file.txt", 0);
+	public void addName(String Name, String file){
+		everything.clear();
 		everything.add(Name);
-		editFile(everything, "file.txt");
+		editFile(everything, file, true);
 	}
 }

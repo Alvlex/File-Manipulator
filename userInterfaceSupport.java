@@ -1,9 +1,18 @@
 package mainProgram;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class userInterfaceSupport {
 	long longNumber, startTime;
@@ -14,13 +23,26 @@ public class userInterfaceSupport {
 	ReadingFiles readingFiles = new ReadingFiles();
 	Time time = new Time();
 
-	public String repeatedCode(String modulation){
-		List<String> original = readingFiles.textFiles();
-		String question = "What file do you want to " + modulation + "?";
-		for (int i = 0; i < original.size(); i ++){
-			question = question + "\n" + original.get(i);
+	public String fileOption(String modulation){
+		Object[] options = new Object[readingFiles.textFiles().size()];
+		for (int i = 0; i < readingFiles.textFiles().size(); i ++){
+			options[i] = readingFiles.textFiles().get(i); 
 		}
-		return JOptionPane.showInputDialog(null, question);
+		JComboBox<?> optionList = new JComboBox<Object>(options); 
+		optionList.setSelectedIndex(0); 
+		JPanel jpan = new JPanel (); 
+		jpan.add(new JLabel("Choose a file to " + modulation + " :")); 
+		jpan.add(optionList); 
+		int n = JOptionPane.showOptionDialog(null, jpan, "File Selector", 
+				JOptionPane.DEFAULT_OPTION, 
+				JOptionPane.QUESTION_MESSAGE, 
+				null, 
+				null, 
+				null); 
+		if (n != -1){ 
+			n = optionList.getSelectedIndex(); 
+		} 
+		return options[n].toString();
 	}
 
 	public void randomize(List<String> original){
@@ -32,45 +54,43 @@ public class userInterfaceSupport {
 	public void sort(List<String> original, ReadingFiles readingFiles){
 		startTime = time.getStartTime(longNumber);
 		everything = readingFiles.sortFile(original);
-		fileEditer.editFile(everything, "file.txt");
+		fileEditer.editFile(everything, "file.txt", false);
 		time.outputTotalTime("sorting", longNumber, longNumber, startTime);
 	}
 
-	public void open(List<String> original){
-		String answer = repeatedCode("open");
+	public void open(List<String> original, String answer){
 		startTime = time.getStartTime(longNumber);
 		fileEditer.open(answer);
 		time.outputTotalTime("opening", longNumber, longNumber, startTime);
 	}
 
-	public void add(List<String> original){
-		int reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?\nBetween 0 and " + original.size()));
+	public void add(List<String> original, String file){
+		int reply = Integer.parseInt(JOptionPane.showInputDialog("How many names?\nBetween 0 and " + readingFiles.readFile("randomNames.txt", 0).size()));
 		startTime = time.getStartTime(longNumber);
-		fileEditer.add(reply);
+		fileEditer.add(reply, file);
 		time.outputTotalTime("adding names", longNumber, longNumber, startTime);
 	}
 
-	public void eraseSpaces(List<String> original){
-		String answer = repeatedCode("erase spaces from");
+	public void eraseSpaces(List<String> original, String answer){
 		startTime = time.getStartTime(longNumber);
 		fileEditer.spaceEraser(answer);
 		time.outputTotalTime("erase spaces", longNumber, longNumber, startTime);
 	}
 
-	public void restore(){
+	public void restore(String file){
 		startTime = time.getStartTime(longNumber);
-		fileEditer.restore();
+		fileEditer.restore(file);
 		time.outputTotalTime("restore", longNumber, longNumber, startTime);
 	}
 
-	public void randomDelete(List<String> original){
+	public void randomDelete(List<String> original, String file){
 		int answer = Integer.parseInt(JOptionPane.showInputDialog("How many names do you want to randomly delete?\nBetween 0 and " + original.size()));
 		startTime = time.getStartTime(longNumber);
-		fileEditer.deleteRandom(answer);
+		fileEditer.deleteRandom(answer, file);
 		time.outputTotalTime("randomly delete", longNumber, longNumber, startTime);
 	}
 
-	public void specificDelete(){
+	public void specificDelete(String file){
 		boolean nameExists;
 		while(true){
 			String answer = JOptionPane.showInputDialog("What name do you want to delete?\nType 'false' if you want to stop");
@@ -79,7 +99,7 @@ public class userInterfaceSupport {
 				break;
 			}
 			else{
-				nameExists = fileEditer.deleteSpecific(answer);
+				nameExists = fileEditer.deleteSpecific(answer, file);
 			}
 			time.outputTotalTime("specifically delete", longNumber, longNumber, startTime);
 			if (nameExists == false){
@@ -90,11 +110,11 @@ public class userInterfaceSupport {
 
 	public void save(List<String> original){
 		startTime = time.getStartTime(longNumber);
-		fileEditer.editFile(original, "original.txt");
+		fileEditer.editFile(original, "original.txt", false);
 		time.outputTotalTime("saving the file", longNumber, longNumber, startTime);
 	}
 
-	public void addName(){
+	public void addName(String file){
 		while(true){
 			String name = JOptionPane.showInputDialog("Input a name\nType 'null' to go back");
 			if (name.equals("null")){
@@ -102,7 +122,7 @@ public class userInterfaceSupport {
 			}
 			else{
 				startTime = time.getStartTime(longNumber);
-				fileEditer.addName(name);
+				fileEditer.addName(name, file);
 				time.outputTotalTime("adding a name", longNumber, longNumber, startTime);
 			}
 		}
@@ -124,7 +144,7 @@ public class userInterfaceSupport {
 			everything = original;
 			startTime = time.getStartTime(longNumber);
 			everything.remove(index - 1);
-			fileEditer.editFile(everything, "file.txt");
+			fileEditer.editFile(everything, "file.txt", false);
 			time.outputTotalTime("deleting an index", longNumber, longNumber, startTime);
 		}
 	}
@@ -152,5 +172,41 @@ public class userInterfaceSupport {
 		}
 		time.outputTotalTime("finding the index", longNumber, longNumber, startTime);
 		JOptionPane.showMessageDialog(null, message);
+	}
+
+	public void addNewFile(){
+		String newFileName = JOptionPane.showInputDialog("Input a name for the file you want to create");
+		startTime = time.getStartTime(longNumber);
+		File file = new File("/" + newFileName + ".txt");
+		String path = file.getAbsolutePath();
+		file = new File(path);
+		file.getParentFile().mkdirs(); 
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		time.outputTotalTime("adding a new file", longNumber, longNumber, startTime); //time out from this is only sometimes 0 milliseconds (not sure why)
+	}
+	
+	public void deleteFile(String file, List<String> original){
+		startTime = time.getStartTime(longNumber);
+		original.clear();
+		fileEditer.editFile(original, file, false);
+		File file1 = new File("/" + file);
+		String Path = file1.getAbsolutePath();
+		file1 = new File(Path);
+		Path path = file1.toPath();
+		try {
+		    Files.delete(path);
+		} catch (NoSuchFileException x) {
+		    System.err.format("%s: no such" + " file or directory%n", path);
+		} catch (DirectoryNotEmptyException x) {
+		    System.err.format("%s not empty%n", path);
+		} catch (IOException x) {
+		    // File permission problems are caught here.
+		    System.err.println(x);
+		}
+		time.outputTotalTime("deleting a file", longNumber, longNumber, startTime);
 	}
 }
